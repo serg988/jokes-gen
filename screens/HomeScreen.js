@@ -5,17 +5,15 @@ import Card from '../components/Card'
 const HomeScreen = () => {
   const [rawText, setRawText] = useState([])
   const [count, setCount] = useState(0)
+  const [fav, setFav] = useState([])
 
   const fetchData = useCallback(async () => {
     const response = await fetch(
       'https://nameless-falls-80997.herokuapp.com/https://www.anekdot.ru/rss/randomu.html',
       {
         type: 'GET',
-        // contentType: 'application/json',
-        // // set the request header authorization to the bearer token that is generated
         headers: {
           'X-Requested-With': 'HttpRequest',
-          // Origin: 'http://localhost:3000',
         },
       }
     )
