@@ -1,11 +1,36 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useLayoutEffect, useCallback } from 'react'
 import { View, Text, StyleSheet, Button } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import {
+  HeaderButtons,
+  HeaderButton,
+  Item,
+  HiddenItem,
+  OverflowMenu,
+} from 'react-navigation-header-buttons'
+import { Ionicons } from '@expo/vector-icons'
 import Card from '../components/Card'
+import CustomHeaderButton from '../components/HeaderButton'
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const [rawText, setRawText] = useState([])
   const [count, setCount] = useState(0)
   const [fav, setFav] = useState([])
+
+  useEffect(() => {
+    const getJokesFromStorage = async () => {
+      const fetchedJokes = await AsyncStorage.getItem('jokes')
+      const parsedJokes = JSON.parse(fetchedJokes)
+      if (parsedJokes) {
+        setFav(parsedJokes)
+      }
+    }
+    getJokesFromStorage()
+  }, [])
+
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
 
   const fetchData = useCallback(async () => {
     const response = await fetch(
@@ -27,11 +52,22 @@ const HomeScreen = () => {
     setRawText(newArr)
   }, [fetchData])
 
-  useEffect(() => {
-    fetchData()
-  }, [fetchData])
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+          <Item
+            title='Save'
+            iconName='ios-star'
+            iconSize={34}
+            onPress={() => navigation.navigate('Fav')}
+          />
+        </HeaderButtons>
+      ),
+    })
+  }, [navigation])
 
-  const countNext = () => {
+  const onCountNextHandler = () => {
     setCount((prevState) => prevState + 1)
     if (count === rawText.length - 1) {
       fetchData()
@@ -39,6 +75,21 @@ const HomeScreen = () => {
       setRawText([])
     }
   }
+
+  const onSaveHandler = (joke) => {
+    if (!joke) return
+    if (fav) {
+      if (joke === fav[fav.length - 1]) {
+        return
+      }
+    }
+
+    const updatedFav = [...fav]
+    updatedFav.push(joke)
+    setFav(updatedFav)
+    AsyncStorage.setItem('jokes', JSON.stringify(updatedFav))
+  }
+
   return (
     <View style={styles.screen}>
       <Card style={styles.card}>
@@ -46,7 +97,18 @@ const HomeScreen = () => {
           {rawText.length !== 0 && rawText[count]}
         </Text>
         <View style={styles.buttonContainer}>
-          <Button title='Еще' onPress={countNext} />
+          <Button
+            color='orange'
+            title='Следующий'
+            onPress={onCountNextHandler}
+          />
+          <Button
+            color='green'
+            title='Сохранить'
+            onPress={() => {
+              onSaveHandler(rawText[count])
+            }}
+          />
         </View>
       </Card>
     </View>
@@ -68,6 +130,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginTop: 50,
   },
 })
