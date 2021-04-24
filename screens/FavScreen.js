@@ -15,7 +15,7 @@ const FavScreen = (props) => {
       } catch (error) {
         Alert.alert(
           ('Ничего не найдено',
-          'Вы еще ничго не сохранили',
+          'Вы еще ничего не сохранили',
           [{ text: 'ОК', style: 'cancel' }])
         )
       }

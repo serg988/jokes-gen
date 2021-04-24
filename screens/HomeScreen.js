@@ -56,19 +56,22 @@ const HomeScreen = ({ navigation }) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-          <Item
-            title='Save'
-            iconName='ios-star'
-            iconSize={34}
-            color='white'
-            onPress={() => navigation.navigate('Fav')}
-          />
-        </HeaderButtons>
-      ),
-    })
-  }, [navigation])
+      headerRight: () => {
+        console.log(fav.length);
+        return (
+          fav.length !== 0 && <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+            <Item
+              title='Save'
+              iconName='ios-star'
+              iconSize={34}
+              color='white'
+              onPress={() => navigation.navigate('Fav')}
+            />
+          </HeaderButtons>
+        )
+      },
+    },)
+  }, [navigation, fav])
 
   const onCountNextHandler = () => {
     setCount((prevState) => prevState + 1)
