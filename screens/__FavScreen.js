@@ -1,5 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { useState, useEffect } from 'react'
+import AsyncStorage from '@react-native-community/async-storage'
 import { View, Text, StyleSheet, FlatList, Alert } from 'react-native'
 
 import JokeItem from '../components/JokeItem'
@@ -8,27 +8,26 @@ const FavScreen = (props) => {
   const [favJokes, setFavJokes] = useState([])
   useEffect(() => {
     const getJokesFromStorage = async () => {
-      try {
-        const fetchedJokes = await AsyncStorage.getItem('jokes')
-        const parsedJokes = JSON.parse(fetchedJokes)
-        setFavJokes(parsedJokes)
-      } catch (error) {
-        Alert.alert(
-          ('Ничего не найдено',
-          'Вы еще ничго не сохранили',
-          [{ text: 'ОК', style: 'cancel' }])
-        )
-      }
+      const fetchedJokes = await AsyncStorage.getItem('jokes')
+      const parsedJokes = JSON.parse(fetchedJokes)
+      setFavJokes(parsedJokes)
     }
     getJokesFromStorage()
   }, [])
 
   const deleteJoke = (id) => {
-    console.log(id)
     if (favJokes) {
       const updatedFav = favJokes.filter((joke) => joke.id !== id)
       setFavJokes(updatedFav)
-      AsyncStorage.setItem('jokes', JSON.stringify(updatedFav))
+      setStorage(JSON.stringify(updatedFav))
+    }
+  }
+
+  const setStorage = async (fav) => {
+    try {
+      await AsyncStorage.setItem('jokes', fav )
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -43,10 +42,11 @@ const FavScreen = (props) => {
     ])
   }
   let content
-  // console.log(favJokes)
+  console.log(favJokes)
   if (favJokes.length !== 0) {
     content = (
-      <View style={styles.screen}>
+      <View>
+        {/* <Text>XXXXXXXXXXXXXXXXXXX</Text> */}
         <FlatList
           keyExtractor={(item) => Math.random().toString()}
           data={favJokes}
@@ -62,8 +62,8 @@ const FavScreen = (props) => {
     )
   } else {
     content = (
-      <View style={styles.screen}>
-        <Text style={{ fontSize: 18 }}>Сохраненных анекдотов еще нет</Text>
+      <View>
+        <Text>Сохраненных анекдотов еще нет</Text>
       </View>
     )
   }
@@ -73,8 +73,7 @@ const FavScreen = (props) => {
 
 const styles = StyleSheet.create({
   screen: {
-    // padding: 30,
-    backgroundColor: '#d8e1e9',
+    padding: 30,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

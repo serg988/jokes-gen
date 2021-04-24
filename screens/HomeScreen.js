@@ -1,6 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { useState, useEffect, useLayoutEffect, useCallback } from 'react'
 import { View, Text, StyleSheet, Button } from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import {
   HeaderButtons,
   HeaderButton,
@@ -11,6 +11,7 @@ import {
 import { Ionicons } from '@expo/vector-icons'
 import Card from '../components/Card'
 import CustomHeaderButton from '../components/HeaderButton'
+import { bkgPalette } from '../constants/palette'
 
 const HomeScreen = ({ navigation }) => {
   const [rawText, setRawText] = useState([])
@@ -25,6 +26,7 @@ const HomeScreen = ({ navigation }) => {
         setFav(parsedJokes)
       }
     }
+    // AsyncStorage.setItem('jokes', JSON.stringify([]))
     getJokesFromStorage()
   }, [])
 
@@ -60,6 +62,7 @@ const HomeScreen = ({ navigation }) => {
             title='Save'
             iconName='ios-star'
             iconSize={34}
+            color='white'
             onPress={() => navigation.navigate('Fav')}
           />
         </HeaderButtons>
@@ -78,21 +81,26 @@ const HomeScreen = ({ navigation }) => {
 
   const onSaveHandler = (joke) => {
     if (!joke) return
-    if (fav) {
-      if (joke === fav[fav.length - 1]) {
+    if (fav && fav.length !== 0) {
+      if (joke === fav[fav.length - 1].joke) {
         return
       }
     }
 
     const updatedFav = [...fav]
-    updatedFav.push(joke)
+    const id = Math.round(new Date().getTime() * Math.random()).toString()
+    updatedFav.push({ id, joke })
     setFav(updatedFav)
+
     AsyncStorage.setItem('jokes', JSON.stringify(updatedFav))
   }
 
   return (
     <View style={styles.screen}>
-      <Card style={styles.card}>
+      <Card
+        style={styles.card}
+        style={{ backgroundColor: bkgPalette[Math.floor(Math.random() * 20)] }}
+      >
         <Text style={styles.text}>
           {rawText.length !== 0 && rawText[count]}
         </Text>
@@ -117,6 +125,7 @@ const HomeScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   screen: {
+    backgroundColor: '#d8e1e9',
     padding: 30,
     flex: 1,
     justifyContent: 'center',
