@@ -11,7 +11,7 @@ import Swipeable from 'react-native-gesture-handler/Swipeable'
 import Card from './Card'
 import { bkgPalette } from '../constants/palette'
 
-const RightActions = ({ progress, dragX, onPress, id }) => {
+const RightActions = ({ progress, dragX, onPress }) => {
   const scale = dragX.interpolate({
     inputRange: [-100, 0],
     outputRange: [1, 0],
@@ -28,18 +28,11 @@ const RightActions = ({ progress, dragX, onPress, id }) => {
   )
 }
 
-const JokeItem = ({joke, onSwipeFromLeft, onDelete}) => {
-  
+const JokeItem = ({ joke, onSwipeFromLeft, onDelete }) => {
   return (
     <Swipeable
-      // renderLeftActions={LeftActions}
-      // onSwipeableLeftOpen={onSwipeFromLeft}
-      renderRightActions={(progress, dragX, ) => (
-        <RightActions
-          progress={progress}
-          dragX={dragX}
-          onPress={onDelete}
-        />
+      renderRightActions={(progress, dragX) => (
+        <RightActions progress={progress} dragX={dragX} onPress={onDelete} />
       )}
     >
       <Card
@@ -48,13 +41,7 @@ const JokeItem = ({joke, onSwipeFromLeft, onDelete}) => {
           backgroundColor: bkgPalette[Math.floor(Math.random() * 20)],
         }}
       >
-        {/* <TouchableOpacity
-      onPress={props.onDelete.bind(this, props.id)}
-      useForeground
-    > */}
-        <Text>{joke}</Text>
-        {/* <Text style={styles.text}>{joke}</Text> */}
-        {/* </TouchableOpacity> */}
+        <Text style={styles.text}>{joke}</Text>
       </Card>
     </Swipeable>
   )
@@ -78,7 +65,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#dd2c00',
     justifyContent: 'center',
     flex: 1,
-    borderRadius: 5,
+    borderRadius: 10,
     alignItems: 'flex-end',
   },
   actionText: {
