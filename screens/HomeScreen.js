@@ -57,7 +57,7 @@ const HomeScreen = ({ navigation }) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => {
-        console.log(fav.length);
+        // console.log(fav.length);
         return (
           fav.length !== 0 && <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
             <Item

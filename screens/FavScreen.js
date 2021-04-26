@@ -33,15 +33,18 @@ const FavScreen = (props) => {
   }
 
   const onDeleteHandler = (id) => {
-    Alert.alert('Удалить анекдот?', 'Вы точно хотите удалить?', [
-      { text: 'Нет', style: 'cancel' },
-      {
-        text: ' Да',
-        style: 'destructive',
-        onPress: () => deleteJoke(id),
-      },
-    ])
+    // console.log(id)
+    // Alert.alert('Удалить анекдот?', 'Вы точно хотите удалить?', [
+    //   { text: 'Нет', style: 'cancel' },
+    //   {
+    //     text: ' Да',
+    //     style: 'destructive',
+    //     onPress: () => deleteJoke(id),
+    //   },
+    // ])
+    deleteJoke(id)
   }
+
   let content
   // console.log(favJokes)
   if (favJokes.length !== 0) {
@@ -54,7 +57,7 @@ const FavScreen = (props) => {
             <JokeItem
               joke={itemData.item.joke}
               id={itemData.item.id}
-              onDelete={onDeleteHandler}
+              onDelete={() => onDeleteHandler(itemData.item.id)}
             />
           )}
         />
