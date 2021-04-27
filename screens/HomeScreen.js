@@ -47,7 +47,8 @@ const HomeScreen = ({ navigation }) => {
 
   const fetchData = useCallback(async () => {
     const response = await fetch(
-      'https://nameless-falls-80997.herokuapp.com/https://www.anekdot.ru/rss/randomu.html',
+      'https://nameless-falls-80997.herokuapp.com/https://allanecdots.ru/vidgets/allanecdots.js?n=10&nocensored=1',
+      // 'https://nameless-falls-80997.herokuapp.com/https://www.anekdot.ru/rss/randomu.html',
       {
         type: 'GET',
         headers: {
@@ -56,19 +57,25 @@ const HomeScreen = ({ navigation }) => {
       }
     )
     const resData = await response.text()
-    const headerCutText = resData.slice(138)
-    const tailCutText = headerCutText.split("]')")[0]
-    const arr = tailCutText.split('\\",\\"').slice(0, -1)
-    const newArray = arr.map((w) => w.replace(/<br>/g, ' '))
-    const newArray1 = newArray.map((a) => a.replace(/\\\\\\/g, ' '))
-    const newArr = newArray1.map((a) => a.replace(/\\r/g, ''))
+
+    const headerCutText = resData.slice(218)
+    const tailCutText = headerCutText.split('<br /><br />')
+    const arr = tailCutText.map((w) => w.replace(/<br \/>/g, ' '))
+    const newArr = arr.map((w) => w.replace(/<\/p>\'/g, ''))
     setRawText(newArr)
+
+    // const headerCutText = resData.slice(138)
+    // const tailCutText = headerCutText.split("]')")[0]
+    // const arr = tailCutText.split('\\",\\"').slice(0, -1)
+    // const newArray = arr.map((w) => w.replace(/<br>/g, ' '))
+    // const newArray1 = newArray.map((a) => a.replace(/\\\\\\/g, ' '))
+    // const newArr = newArray1.map((a) => a.replace(/\\r/g, ''))
+    // setRawText(newArr)
   }, [fetchData])
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => {
-        // console.log(fav.length);
         return (
           fav.length !== 0 && (
             <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
@@ -81,6 +88,19 @@ const HomeScreen = ({ navigation }) => {
               />
             </HeaderButtons>
           )
+        )
+      },
+      headerLeft: () => {
+        return (
+          <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+            <Item
+              title='Menu'
+              iconName='ios-menu'
+              iconSize={34}
+              color='white'
+              onPress={() => navigation.openDrawer()}
+            />
+          </HeaderButtons>
         )
       },
     })
@@ -157,20 +177,6 @@ const HomeScreen = ({ navigation }) => {
             <Text style={styles.text}>
               {rawText.length !== 0 && rawText[count]}
             </Text>
-            {/* <View style={styles.buttonContainer}>
-              <Button
-                color='orange'
-                title='Следующий'
-                onPress={onCountNextHandler}
-              />
-              <Button
-              color='green'
-              title='Сохранить'
-              onPress={() => {
-                onSaveHandler(rawText[count])
-              }}
-            />
-            </View> */}
           </TouchableOpacity>
         </Card>
       </Swipeable>
