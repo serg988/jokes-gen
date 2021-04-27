@@ -1,52 +1,21 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { View, Text, StyleSheet, FlatList, Alert } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
 
 import JokeItem from '../components/JokeItem'
+import { deleteJoke, getFav } from '../store/actions/joke'
 
-const FavScreen = (props) => {
-  const [favJokes, setFavJokes] = useState([])
-  useEffect(() => {
-    const getJokesFromStorage = async () => {
-      try {
-        const fetchedJokes = await AsyncStorage.getItem('jokes')
-        const parsedJokes = JSON.parse(fetchedJokes)
-        setFavJokes(parsedJokes)
-      } catch (error) {
-        Alert.alert(
-          ('Ничего не найдено',
-          'Вы еще ничего не сохранили',
-          [{ text: 'ОК', style: 'cancel' }])
-        )
-      }
-    }
-    getJokesFromStorage()
-  }, [])
+const FavScreen = () => {
+  const dispatch = useDispatch()
+ 
+  const favJokes = useSelector((state) => state.joke.fav)
 
-  const deleteJoke = (id) => {
-    console.log(id)
-    if (favJokes) {
-      const updatedFav = favJokes.filter((joke) => joke.id !== id)
-      setFavJokes(updatedFav)
-      AsyncStorage.setItem('jokes', JSON.stringify(updatedFav))
-    }
-  }
 
   const onDeleteHandler = (id) => {
-    // console.log(id)
-    // Alert.alert('Удалить анекдот?', 'Вы точно хотите удалить?', [
-    //   { text: 'Нет', style: 'cancel' },
-    //   {
-    //     text: ' Да',
-    //     style: 'destructive',
-    //     onPress: () => deleteJoke(id),
-    //   },
-    // ])
-    deleteJoke(id)
+    dispatch(deleteJoke(id))
   }
 
   let content
-  // console.log(favJokes)
   if (favJokes.length !== 0) {
     content = (
       <View style={styles.screen}>

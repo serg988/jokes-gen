@@ -25,7 +25,10 @@ export const StackNavigator = () => {
         name='Home'
         component={HomeScreen}
         options={{
-          title: 'Случайный Анекдот',
+          title: 'Анекдоты',
+          headerTitleStyle: {
+            // fontWeight: 'bold',
+          },
         }}
       />
       <Stack.Screen

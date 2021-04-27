@@ -3,13 +3,12 @@ import { allAnekdot } from '../../shared/regexp'
 
 export const SET_JOKES = 'SET_JOKES'
 export const RESET_JOKES = 'RESET_JOKES'
+export const DELETE_JOKE = 'DELETE_JOKE'
 export const SAVE_FAV = 'SAVE_FAV'
 export const GET_FAV = 'GET_FAV'
 
 export const setJokes = () => {
   return async (dispatch) => {
-    // dispatch(setError(''))
-
     // let url = `https://www.cbr-xml-daily.ru/archive/${yyyy}/${mm}/${dd}/daily_json.js`
     try {
       const response = await fetch(
@@ -48,4 +47,12 @@ export const saveFav = (joke) => async (dispatch) => {
   updatedFav.push({ id, joke })
   await AsyncStorage.setItem('jokes', JSON.stringify(updatedFav))
   dispatch({ type: SAVE_FAV, payload: updatedFav })
+}
+
+export const deleteJoke = (id) => async (dispatch, getState) => {
+  const state = getState()
+  const fav = state.joke.fav
+  const updatedFav = fav.filter((joke) => joke.id !== id)
+  await AsyncStorage.setItem('jokes', JSON.stringify(updatedFav))
+  dispatch({ type: DELETE_JOKE, payload: updatedFav })
 }

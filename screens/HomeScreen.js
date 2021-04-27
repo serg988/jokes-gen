@@ -26,24 +26,26 @@ const HomeScreen = ({ navigation }) => {
     dispatch(getFav())
   }, [dispatch])
 
-  const rawText = useSelector((state) => state.joke.jokes)
   const fav = useSelector((state) => state.joke.fav)
+
+  const fetchedJokes = useSelector((state) => state.joke.jokes)
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => {
         return (
+          fav &&
           fav.length !== 0 && (
-            <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-              <Item
-                title='Save'
-                iconName='ios-star'
-                iconSize={34}
-                color='white'
-                onPress={() => navigation.navigate('Fav')}
-              />
-            </HeaderButtons>
-          )
+          <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+            <Item
+              title='Save'
+              iconName='ios-star'
+              iconSize={34}
+              color='white'
+              onPress={() => navigation.navigate('Fav')}
+            />
+          </HeaderButtons>
+        )
         )
       },
       headerLeft: () => {
@@ -64,7 +66,7 @@ const HomeScreen = ({ navigation }) => {
 
   const onCountNextHandler = () => {
     setCount((prevState) => prevState + 1)
-    if (count === rawText.length - 1) {
+    if (count === fetchedJokes.length - 1) {
       dispatch(resetJokes())
       dispatch(setJokes())
       setCount(0)
@@ -103,8 +105,8 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.screen}>
-      {rawText.length === 0 ? (
-        <ActivityIndicator size='large' color='red' />
+      {fetchedJokes.length === 0 ? (
+        <ActivityIndicator size='large' color='#f4511e' />
       ) : (
         <Swipeable
           ref={swipeableRef}
@@ -113,7 +115,7 @@ const HomeScreen = ({ navigation }) => {
               progress={progress}
               dragX={dragX}
               onPress={() => {
-                onSaveHandler(rawText[count])
+                onSaveHandler(fetchedJokes[count])
               }}
             />
           )}
@@ -129,7 +131,7 @@ const HomeScreen = ({ navigation }) => {
               style={{ borderRadius: 10 }}
             >
               <Text style={styles.text}>
-                {rawText.length !== 0 && rawText[count]}
+                {fetchedJokes.length !== 0 && fetchedJokes[count]}
               </Text>
             </TouchableOpacity>
           </Card>
@@ -151,7 +153,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   text: {
-    fontSize: 20,
+    fontSize: 16,
   },
   buttonContainer: {
     flexDirection: 'row',

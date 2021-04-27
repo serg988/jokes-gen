@@ -1,4 +1,4 @@
-import { RESET_JOKES, SAVE_FAV, GET_FAV, SET_JOKES } from '../actions/joke'
+import { RESET_JOKES, SAVE_FAV, GET_FAV, SET_JOKES, DELETE_JOKE } from '../actions/joke'
 
 const initialState = {
   jokes: [],
@@ -16,6 +16,7 @@ const jokeReducer = (state = initialState, action) => {
       }
     case RESET_JOKES:
       return {
+        ...state,
         jokes: [],
       }
     case GET_FAV:
@@ -27,6 +28,11 @@ const jokeReducer = (state = initialState, action) => {
       return {
         ...state,
         fav: action.payload,
+      }
+    case DELETE_JOKE:
+      return {
+        ...state,
+        fav: action.payload
       }
     default:
       return state
