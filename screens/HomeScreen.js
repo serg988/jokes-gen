@@ -1,77 +1,33 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useLayoutEffect,
-  useCallback,
-} from 'react'
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   View,
   Text,
   Animated,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native'
-import {
-  HeaderButtons,
-  HeaderButton,
-  Item,
-} from 'react-navigation-header-buttons'
-import { Ionicons } from '@expo/vector-icons'
+import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 import Card from '../components/Card'
 import CustomHeaderButton from '../components/HeaderButton'
 import { bkgPalette } from '../constants/palette'
 
+import { getFav, resetJokes, saveFav, setJokes } from '../store/actions/joke'
+
 const HomeScreen = ({ navigation }) => {
+  const dispatch = useDispatch()
   const swipeableRef = useRef(null)
-  const [rawText, setRawText] = useState([])
   const [count, setCount] = useState(0)
-  const [fav, setFav] = useState([])
 
   useEffect(() => {
-    const getJokesFromStorage = async () => {
-      const fetchedJokes = await AsyncStorage.getItem('jokes')
-      const parsedJokes = JSON.parse(fetchedJokes)
-      if (parsedJokes) {
-        setFav(parsedJokes)
-      }
-    }
-    getJokesFromStorage()
-  }, [])
+    dispatch(setJokes())
+    dispatch(getFav())
+  }, [dispatch])
 
-  useEffect(() => {
-    fetchData()
-  }, [fetchData])
-
-  const fetchData = useCallback(async () => {
-    const response = await fetch(
-      'https://nameless-falls-80997.herokuapp.com/https://allanecdots.ru/vidgets/allanecdots.js?n=10&nocensored=1',
-      // 'https://nameless-falls-80997.herokuapp.com/https://www.anekdot.ru/rss/randomu.html',
-      {
-        type: 'GET',
-        headers: {
-          'X-Requested-With': 'HttpRequest',
-        },
-      }
-    )
-    const resData = await response.text()
-
-    const headerCutText = resData.slice(218)
-    const tailCutText = headerCutText.split('<br /><br />')
-    const arr = tailCutText.map((w) => w.replace(/<br \/>/g, ' '))
-    const newArr = arr.map((w) => w.replace(/<\/p>\'/g, ''))
-    setRawText(newArr)
-
-    // const headerCutText = resData.slice(138)
-    // const tailCutText = headerCutText.split("]')")[0]
-    // const arr = tailCutText.split('\\",\\"').slice(0, -1)
-    // const newArray = arr.map((w) => w.replace(/<br>/g, ' '))
-    // const newArray1 = newArray.map((a) => a.replace(/\\\\\\/g, ' '))
-    // const newArr = newArray1.map((a) => a.replace(/\\r/g, ''))
-    // setRawText(newArr)
-  }, [fetchData])
+  const rawText = useSelector((state) => state.joke.jokes)
+  const fav = useSelector((state) => state.joke.fav)
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -109,9 +65,9 @@ const HomeScreen = ({ navigation }) => {
   const onCountNextHandler = () => {
     setCount((prevState) => prevState + 1)
     if (count === rawText.length - 1) {
-      fetchData()
+      dispatch(resetJokes())
+      dispatch(setJokes())
       setCount(0)
-      setRawText([])
     }
   }
 
@@ -123,12 +79,7 @@ const HomeScreen = ({ navigation }) => {
         return
       }
     }
-
-    const updatedFav = [...fav]
-    const id = Math.round(new Date().getTime() * Math.random()).toString()
-    updatedFav.push({ id, joke })
-    setFav(updatedFav)
-    AsyncStorage.setItem('jokes', JSON.stringify(updatedFav))
+    dispatch(saveFav(joke))
   }
 
   const RightActions = ({ progress, dragX, onPress }) => {
@@ -152,34 +103,38 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.screen}>
-      <Swipeable
-        ref={swipeableRef}
-        renderRightActions={(progress, dragX) => (
-          <RightActions
-            progress={progress}
-            dragX={dragX}
-            onPress={() => {
-              onSaveHandler(rawText[count])
-            }}
-          />
-        )}
-      >
-        <Card
-          style={{
-            margin: 10,
-            backgroundColor: bkgPalette[Math.floor(Math.random() * 20)],
-          }}
+      {rawText.length === 0 ? (
+        <ActivityIndicator size='large' color='red' />
+      ) : (
+        <Swipeable
+          ref={swipeableRef}
+          renderRightActions={(progress, dragX) => (
+            <RightActions
+              progress={progress}
+              dragX={dragX}
+              onPress={() => {
+                onSaveHandler(rawText[count])
+              }}
+            />
+          )}
         >
-          <TouchableOpacity
-            onPress={onCountNextHandler}
-            style={{ borderRadius: 10 }}
+          <Card
+            style={{
+              margin: 10,
+              backgroundColor: bkgPalette[Math.floor(Math.random() * 20)],
+            }}
           >
-            <Text style={styles.text}>
-              {rawText.length !== 0 && rawText[count]}
-            </Text>
-          </TouchableOpacity>
-        </Card>
-      </Swipeable>
+            <TouchableOpacity
+              onPress={onCountNextHandler}
+              style={{ borderRadius: 10 }}
+            >
+              <Text style={styles.text}>
+                {rawText.length !== 0 && rawText[count]}
+              </Text>
+            </TouchableOpacity>
+          </Card>
+        </Swipeable>
+      )}
     </View>
   )
 }
