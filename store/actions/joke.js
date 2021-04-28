@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { allAnekdot } from '../../shared/regexp'
+import { allAnekdot, anekdot } from '../../shared/regexp'
 
 export const SET_JOKES = 'SET_JOKES'
 export const RESET_JOKES = 'RESET_JOKES'
@@ -8,22 +8,25 @@ export const SAVE_FAV = 'SAVE_FAV'
 export const GET_FAV = 'GET_FAV'
 
 export const setJokes = () => {
-  return async (dispatch) => {
-    // let url = `https://www.cbr-xml-daily.ru/archive/${yyyy}/${mm}/${dd}/daily_json.js`
+  return async (dispatch, getState) => {
+    const state = getState()
+    const url = state.settings.url
+    const urlNo = state.settings.urlNo
     try {
-      const response = await fetch(
-        'https://nameless-falls-80997.herokuapp.com/https://allanecdots.ru/vidgets/allanecdots.js?n=10&nocensored=1',
-        // 'https://nameless-falls-80997.herokuapp.com/https://www.anekdot.ru/rss/randomu.html',
-        {
-          type: 'GET',
-          headers: {
-            'X-Requested-With': 'HttpRequest',
-          },
-        }
-      )
+      const response = await fetch(url, {
+        type: 'GET',
+        headers: {
+          'X-Requested-With': 'HttpRequest',
+        },
+      })
       const resData = await response.text()
-      const jokesArr = allAnekdot(resData)
-      dispatch({ type: SET_JOKES, payload: jokesArr })
+      if (urlNo === 0) {
+        const jokesArr = allAnekdot(resData)
+        dispatch({ type: SET_JOKES, payload: jokesArr })
+      } else if (urlNo === 1) {
+        const jokesArr = anekdot(resData)
+        dispatch({ type: SET_JOKES, payload: jokesArr })
+      }
     } catch (error) {
       console.log(error)
     }

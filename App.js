@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
+import { Provider as PaperProvider } from 'react-native-paper'
 import { createStore, applyMiddleware, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
@@ -7,11 +8,11 @@ import thunk from 'redux-thunk'
 import { NavigationContainer } from '@react-navigation/native'
 import { MainNavigator } from './navigation/JokeNavigator'
 import jokeReducer from './store/reducers/joke'
-
-import { StyleSheet, Text, View } from 'react-native'
+import settingsReducer from './store/reducers/settings'
 
 const rootReducer = combineReducers({
   joke: jokeReducer,
+  settings: settingsReducer,
 })
 
 const store = createStore(rootReducer, applyMiddleware(thunk))
@@ -20,17 +21,11 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <MainNavigator />
+        <PaperProvider>
+          <MainNavigator />
+        </PaperProvider>
       </NavigationContainer>
     </Provider>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})

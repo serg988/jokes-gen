@@ -1,15 +1,15 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import {
   View,
   Text,
   StyleSheet,
-  TouchableNativeFeedback,
   Animated,
   TouchableOpacity,
 } from 'react-native'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 import Card from './Card'
-import { bkgPalette } from '../constants/palette'
+import { bkgPalette } from '../constants/constants'
 
 const RightActions = ({ progress, dragX, onPress }) => {
   const scale = dragX.interpolate({
@@ -28,7 +28,8 @@ const RightActions = ({ progress, dragX, onPress }) => {
   )
 }
 
-const JokeItem = ({ joke, onSwipeFromLeft, onDelete }) => {
+const JokeItem = ({ joke, onDelete }) => {
+  const fontSize = useSelector((state) => state.settings.fontSize)
   return (
     <Swipeable
       renderRightActions={(progress, dragX) => (
@@ -41,7 +42,7 @@ const JokeItem = ({ joke, onSwipeFromLeft, onDelete }) => {
           backgroundColor: bkgPalette[Math.floor(Math.random() * 20)],
         }}
       >
-        <Text style={styles.text}>{joke}</Text>
+        <Text style={{ fontSize: fontSize }}>{joke}</Text>
       </Card>
     </Swipeable>
   )

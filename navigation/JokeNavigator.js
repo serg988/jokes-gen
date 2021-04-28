@@ -5,6 +5,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import HomeScreen from '../screens/HomeScreen'
 import FavScreen from '../screens/FavScreen'
 import SettingsScreen from '../screens/SettingsScreen'
+import AboutScreen from '../screens/AboutScreen'
 
 const Stack = createStackNavigator()
 
@@ -36,6 +37,54 @@ export const StackNavigator = () => {
         component={FavScreen}
         options={{ title: 'Сохранённые анекдоты' }}
       />
+      <Stack.Screen
+        name='Settings'
+        component={SettingsScreen}
+        options={{ title: 'Настройки' }}
+      />
+    </Stack.Navigator>
+  )
+}
+const SettingsNavigator = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#f4511e',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}
+    >
+      <Stack.Screen
+        name='Settings'
+        component={SettingsScreen}
+        options={{ title: 'Настройки' }}
+      />
+    </Stack.Navigator>
+  )
+}
+
+const AboutNavigator = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#f4511e',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}
+    >
+      <Stack.Screen
+        name='About'
+        component={AboutScreen}
+        options={{ title: 'О программе' }}
+      />
     </Stack.Navigator>
   )
 }
@@ -44,9 +93,21 @@ const Drawer = createDrawerNavigator()
 
 export const MainNavigator = () => {
   return (
-    <Drawer.Navigator initialRouteName='Home'>
+    <Drawer.Navigator
+      initialRouteName='Home'
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#f4511e',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}
+    >
       <Drawer.Screen name='Главная' component={StackNavigator} />
-      <Drawer.Screen name='Настройки' component={SettingsScreen} />
+      <Drawer.Screen name='Настройки' component={SettingsNavigator} />
+      <Drawer.Screen name='О программе' component={AboutNavigator} />
     </Drawer.Navigator>
   )
 }

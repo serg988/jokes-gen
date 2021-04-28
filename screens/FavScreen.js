@@ -3,13 +3,12 @@ import { View, Text, StyleSheet, FlatList, Alert } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 
 import JokeItem from '../components/JokeItem'
-import { deleteJoke, getFav } from '../store/actions/joke'
+import { deleteJoke } from '../store/actions/joke'
 
 const FavScreen = () => {
   const dispatch = useDispatch()
- 
-  const favJokes = useSelector((state) => state.joke.fav)
 
+  const favJokes = useSelector((state) => state.joke.fav)
 
   const onDeleteHandler = (id) => {
     dispatch(deleteJoke(id))

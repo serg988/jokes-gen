@@ -12,7 +12,7 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 import Card from '../components/Card'
 import CustomHeaderButton from '../components/HeaderButton'
-import { bkgPalette } from '../constants/palette'
+import { bkgPalette } from '../constants/constants'
 
 import { getFav, resetJokes, saveFav, setJokes } from '../store/actions/joke'
 
@@ -29,6 +29,7 @@ const HomeScreen = ({ navigation }) => {
   const fav = useSelector((state) => state.joke.fav)
 
   const fetchedJokes = useSelector((state) => state.joke.jokes)
+  const fontSize = useSelector((state) => state.settings.fontSize)
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -36,16 +37,16 @@ const HomeScreen = ({ navigation }) => {
         return (
           fav &&
           fav.length !== 0 && (
-          <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-            <Item
-              title='Save'
-              iconName='ios-star'
-              iconSize={34}
-              color='white'
-              onPress={() => navigation.navigate('Fav')}
-            />
-          </HeaderButtons>
-        )
+            <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+              <Item
+                title='Save'
+                iconName='ios-star'
+                iconSize={34}
+                color='white'
+                onPress={() => navigation.navigate('Fav')}
+              />
+            </HeaderButtons>
+          )
         )
       },
       headerLeft: () => {
@@ -130,7 +131,7 @@ const HomeScreen = ({ navigation }) => {
               onPress={onCountNextHandler}
               style={{ borderRadius: 10 }}
             >
-              <Text style={styles.text}>
+              <Text style={{ fontSize: fontSize }}>
                 {fetchedJokes.length !== 0 && fetchedJokes[count]}
               </Text>
             </TouchableOpacity>
@@ -152,9 +153,9 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
   },
-  text: {
-    fontSize: 16,
-  },
+  // text: {
+  //   fontSize: {fontSize},
+  // },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

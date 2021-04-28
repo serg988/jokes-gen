@@ -20,3 +20,10 @@ export const bkgPalette = [
   '#ffeaae',
   '#dedbd8',
 ]
+
+export const fontSizes = [14, 18, 20, 23]
+
+export const urlSources = [
+  'https://nameless-falls-80997.herokuapp.com/https://allanecdots.ru/vidgets/allanecdots.js?n=10&nocensored=1',
+  'https://nameless-falls-80997.herokuapp.com/https://www.anekdot.ru/rss/randomu.html',
+]
