@@ -130,7 +130,7 @@ export const MainNavigator = () => {
       <Drawer.Screen name='Главная' component={StackNavigator} />
       <Drawer.Screen name='Сохраненное' component={FavNavigator} />
       <Drawer.Screen name='Настройки' component={SettingsNavigator} />
-      <Drawer.Screen name='О программе' component={AboutNavigator} />
+      <Drawer.Screen name='О приложении' component={AboutNavigator} />
     </Drawer.Navigator>
   )
 }

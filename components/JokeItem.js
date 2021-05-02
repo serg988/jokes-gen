@@ -21,7 +21,7 @@ const RightActions = ({ progress, dragX, onPress }) => {
     <TouchableOpacity onPress={onPress}>
       <View style={styles.rightAction}>
         <Animated.Text style={[styles.actionText, { transform: [{ scale }] }]}>
-          Delete
+          Удалить
         </Animated.Text>
       </View>
     </TouchableOpacity>
