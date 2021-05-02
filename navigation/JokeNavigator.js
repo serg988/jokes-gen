@@ -89,6 +89,28 @@ const AboutNavigator = () => {
   )
 }
 
+const FavNavigator = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#f4511e',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}
+    >
+      <Stack.Screen
+        name='Fav'
+        component={FavScreen}
+        options={{ title: 'Сохранённое' }}
+      />
+    </Stack.Navigator>
+  )
+}
+
 const Drawer = createDrawerNavigator()
 
 export const MainNavigator = () => {
@@ -106,6 +128,7 @@ export const MainNavigator = () => {
       }}
     >
       <Drawer.Screen name='Главная' component={StackNavigator} />
+      <Drawer.Screen name='Сохраненное' component={FavNavigator} />
       <Drawer.Screen name='Настройки' component={SettingsNavigator} />
       <Drawer.Screen name='О программе' component={AboutNavigator} />
     </Drawer.Navigator>

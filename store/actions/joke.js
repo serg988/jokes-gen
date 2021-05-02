@@ -46,7 +46,7 @@ export const getFav = () => async (dispatch) => {
 export const saveFav = (joke) => async (dispatch) => {
   const id = Math.round(new Date().getTime() * Math.random()).toString()
   const fav = await AsyncStorage.getItem('jokes')
-  const updatedFav = JSON.parse(fav)
+  const updatedFav = fav ? JSON.parse(fav) : []
   updatedFav.push({ id, joke })
   await AsyncStorage.setItem('jokes', JSON.stringify(updatedFav))
   dispatch({ type: SAVE_FAV, payload: updatedFav })
