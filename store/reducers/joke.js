@@ -1,19 +1,36 @@
-import { RESET_JOKES, SAVE_FAV, GET_FAV, SET_JOKES, DELETE_JOKE } from '../actions/joke'
+import {
+  RESET_JOKES,
+  SAVE_FAV,
+  GET_FAV,
+  SET_JOKES,
+  DELETE_JOKE,
+  NEXT,
+} from '../actions/joke'
 
 const initialState = {
   jokes: [],
   fav: [],
   loading: false,
   error: '',
+  next: false,
+  watched: 0,
 }
 
 const jokeReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_JOKES:
+      const updatedJokes = [...state.jokes, ...action.payload]
       return {
         ...state,
-        jokes: action.payload,
+        jokes: updatedJokes,
       }
+    case NEXT:
+      return {
+        ...state,
+        next: false,
+        watched: state.watched + 100,
+      }
+
     case RESET_JOKES:
       return {
         ...state,
@@ -32,7 +49,7 @@ const jokeReducer = (state = initialState, action) => {
     case DELETE_JOKE:
       return {
         ...state,
-        fav: action.payload
+        fav: action.payload,
       }
     default:
       return state

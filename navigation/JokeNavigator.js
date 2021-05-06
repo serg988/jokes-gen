@@ -22,6 +22,7 @@ export const StackNavigator = () => {
         },
       }}
     >
+ 
       <Stack.Screen
         name='Home'
         component={HomeScreen}

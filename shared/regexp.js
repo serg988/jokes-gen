@@ -15,5 +15,3 @@ export const anekdot = (resData) => {
   const newArr = newArray1.map((a) => a.replace(/\\r/g, ''))
   return newArr
 }
-
-

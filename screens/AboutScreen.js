@@ -14,7 +14,7 @@ const About = ({ navigation }) => (
         Минималистичный дизайн - оставлено только самое необходимое.
       </Text>
     </View>
-    <Text style={styles.textBottom}>Версия: 1.0.1</Text>
+    <Text style={styles.textBottom}>Версия: 1.1.0</Text>
     <Text style={styles.textBottom}>Written by: Sergey Popov</Text>
     <Text style={styles.textBottom}>Email me: serg98888@gmail.com</Text>
     <View style={styles.buttonContainer}>

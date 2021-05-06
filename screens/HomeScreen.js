@@ -1,12 +1,20 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
+import React, {
+  useEffect,
+  useRef,
+  useCallback,
+  useLayoutEffect,
+} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { v4 as uuidv4 } from 'uuid'
 import {
   View,
   Text,
+  FlatList,
   Animated,
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
+  Alert,
 } from 'react-native'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
@@ -14,22 +22,86 @@ import Card from '../components/Card'
 import CustomHeaderButton from '../components/HeaderButton'
 import { bkgPalette } from '../constants/constants'
 
-import { getFav, resetJokes, saveFav, setJokes } from '../store/actions/joke'
+import { getFav, saveFav, setJokes, next } from '../store/actions/joke'
+import { getNumber } from '../shared/random'
 
-const HomeScreen = ({ navigation }) => {
+const Itemm = ({ item }) => {
+  const fav = useSelector((state) => state.joke.fav)
   const dispatch = useDispatch()
   const swipeableRef = useRef(null)
-  const [count, setCount] = useState(0)
+  const fontSize = useSelector((state) => state.settings.fontSize)
 
-  useEffect(() => {
-    dispatch(setJokes())
-    dispatch(getFav())
-  }, [dispatch])
+  const onSaveHandler = (joke) => {
+    swipeableRef.current.close()
+    if (!joke) return
+    if (fav && fav.length !== 0) {
+      if (joke === fav[fav.length - 1].joke) {
+        return
+      }
+    }
+    dispatch(saveFav(joke))
+  }
+
+  const RightActions = ({ progress, dragX, onPress }) => {
+    const scale = dragX.interpolate({
+      inputRange: [-100, 0],
+      outputRange: [1, 0],
+      extrapolate: 'clamp',
+    })
+    return (
+      <TouchableOpacity onPress={onPress}>
+        <View style={styles.rightAction}>
+          <Animated.Text
+            style={[styles.actionText, { transform: [{ scale }] }]}
+          >
+            Сохранить
+          </Animated.Text>
+        </View>
+      </TouchableOpacity>
+    )
+  }
+
+  return (
+    <Swipeable
+      ref={swipeableRef}
+      renderRightActions={(progress, dragX) => (
+        <RightActions
+          progress={progress}
+          dragX={dragX}
+          onPress={() => {
+            onSaveHandler(item)
+          }}
+        />
+      )}
+    >
+      <Card
+        style={{
+          margin: 12,
+          backgroundColor: bkgPalette[getNumber()],
+        }}
+      >
+        <Text style={{ fontSize: fontSize }}>{item.joke}</Text>
+      </Card>
+    </Swipeable>
+  )
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+const HomeScreen = ({ navigation }) => {
+  const dispatch = useDispatch()
 
   const fav = useSelector((state) => state.joke.fav)
 
   const fetchedJokes = useSelector((state) => state.joke.jokes)
-  const fontSize = useSelector((state) => state.settings.fontSize)
+
+  useEffect(() => {
+    if (fetchedJokes.length <= 30) {
+      dispatch(setJokes())
+    }
+  }, [dispatch, fetchedJokes])
+
+  useEffect(() => {
+    dispatch(getFav())
+  }, [])
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -65,78 +137,39 @@ const HomeScreen = ({ navigation }) => {
     })
   }, [navigation, fav])
 
-  const onCountNextHandler = () => {
-    setCount((prevState) => prevState + 1)
-    if (count === fetchedJokes.length - 1) {
-      dispatch(resetJokes())
-      dispatch(setJokes())
-      setCount(0)
-    }
-  }
-
-  const onSaveHandler = (joke) => {
-    swipeableRef.current.close()
-    if (!joke) return
-    if (fav && fav.length !== 0) {
-      if (joke === fav[fav.length - 1].joke) {
-        return
-      }
-    }
-    dispatch(saveFav(joke))
-  }
-
-  const RightActions = ({ progress, dragX, onPress }) => {
-    const scale = dragX.interpolate({
-      inputRange: [-100, 0],
-      outputRange: [1, 0],
-      extrapolate: 'clamp',
-    })
-    return (
-      <TouchableOpacity onPress={onPress}>
-        <View style={styles.rightAction}>
-          <Animated.Text
-            style={[styles.actionText, { transform: [{ scale }] }]}
-          >
-            Сохранить
-          </Animated.Text>
-        </View>
-      </TouchableOpacity>
+  const nextHandler = () => {
+    Alert.alert(
+      'Ого, 30 штук!',
+      'Вы должны разработчику приложения 30 рублей за просмотр 30 анекдотов! Еще 30?',
+      [
+        { text: 'Нет, хватит', style: 'default' },
+        {
+          text: 'Да, конечно!',
+          style: 'destructive',
+          onPress: () => {
+            dispatch(next())
+          },
+        },
+      ]
     )
   }
+
+  const renderItem = useCallback(({ item }) => {
+    return <Itemm item={item} />
+  }, [])
 
   return (
     <View style={styles.screen}>
       {fetchedJokes.length === 0 ? (
         <ActivityIndicator size='large' color='#f4511e' />
       ) : (
-        <Swipeable
-          ref={swipeableRef}
-          renderRightActions={(progress, dragX) => (
-            <RightActions
-              progress={progress}
-              dragX={dragX}
-              onPress={() => {
-                onSaveHandler(fetchedJokes[count])
-              }}
-            />
-          )}
-        >
-          <Card
-            style={{
-              margin: 10,
-              backgroundColor: bkgPalette[Math.floor(Math.random() * 20)],
-            }}
-          >
-            <TouchableOpacity
-              onPress={onCountNextHandler}
-              style={{ borderRadius: 10 }}
-            >
-              <Text style={{ fontSize: fontSize }}>
-                {fetchedJokes.length !== 0 && fetchedJokes[count]}
-              </Text>
-            </TouchableOpacity>
-          </Card>
-        </Swipeable>
+        <FlatList
+          keyExtractor={() => uuidv4()}
+          data={fetchedJokes}
+          onEndReached={nextHandler}
+          onEndReachedThreshold={0.001}
+          renderItem={renderItem}
+        />
       )}
     </View>
   )
@@ -145,7 +178,6 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   screen: {
     backgroundColor: '#d8e1e9',
-    padding: 30,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -153,9 +185,6 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
   },
-  // text: {
-  //   fontSize: {fontSize},
-  // },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
