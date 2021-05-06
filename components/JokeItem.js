@@ -10,6 +10,7 @@ import {
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 import Card from './Card'
 import { bkgPalette } from '../constants/constants'
+import { getNumber } from '../shared/random'
 
 const RightActions = ({ progress, dragX, onPress }) => {
   const scale = dragX.interpolate({
@@ -39,7 +40,7 @@ const JokeItem = ({ joke, onDelete }) => {
       <Card
         style={{
           margin: 20,
-          backgroundColor: bkgPalette[Math.floor(Math.random() * 20)],
+          backgroundColor: bkgPalette[getNumber()],
         }}
       >
         <Text style={{ fontSize: fontSize }}>{joke}</Text>

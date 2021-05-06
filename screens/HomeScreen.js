@@ -1,9 +1,4 @@
-import React, {
-  useEffect,
-  useRef,
-  useCallback,
-  useLayoutEffect,
-} from 'react'
+import React, { useEffect, useRef, useCallback, useLayoutEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid'
 import {
@@ -77,7 +72,8 @@ const Itemm = ({ item }) => {
       <Card
         style={{
           margin: 12,
-          backgroundColor: bkgPalette[getNumber()],
+          backgroundColor: item.bkg,
+          // backgroundColor: bkgPalette[getNumber()],
         }}
       >
         <Text style={{ fontSize: fontSize }}>{item.joke}</Text>

@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { allAnekdot, anekdot } from '../../shared/regexp'
 import { v4 as uuidv4 } from 'uuid'
+import { bkgPalette } from '../../constants/constants'
+import { getNumber } from '../../shared/random'
 
 export const SET_JOKES = 'SET_JOKES'
 export const RESET_JOKES = 'RESET_JOKES'
@@ -27,7 +29,7 @@ export const setJokes = () => {
       if (urlNo === 0) {
         const jokesArr = allAnekdot(resData)
         const indexedArr = jokesArr.map((joke) =>
-          Object({ id: uuidv4(), joke: joke })
+          Object({ id: uuidv4(), joke: joke, bkg: bkgPalette[getNumber()] })
         )
         dispatch({ type: SET_JOKES, payload: indexedArr })
       } else if (urlNo === 1) {
