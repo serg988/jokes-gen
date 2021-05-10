@@ -34,7 +34,10 @@ export const setJokes = () => {
         dispatch({ type: SET_JOKES, payload: indexedArr })
       } else if (urlNo === 1) {
         const jokesArr = anekdot(resData)
-        dispatch({ type: SET_JOKES, payload: jokesArr })
+        const indexedArr = jokesArr.map((joke) =>
+          Object({ id: uuidv4(), joke: joke, bkg: bkgPalette[8] })
+        )
+        dispatch({ type: SET_JOKES, payload: indexedArr })
       }
     } catch (error) {
       console.log(error)

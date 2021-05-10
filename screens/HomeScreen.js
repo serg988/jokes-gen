@@ -20,6 +20,23 @@ import { bkgPalette } from '../constants/constants'
 import { getFav, saveFav, setJokes, next } from '../store/actions/joke'
 import { getNumber } from '../shared/random'
 
+const RightActions = ({ progress, dragX, onPress }) => {
+  const scale = dragX.interpolate({
+    inputRange: [-100, 0],
+    outputRange: [1, 0],
+    extrapolate: 'clamp',
+  })
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.rightAction}>
+        <Animated.Text style={[styles.actionText, { transform: [{ scale }] }]}>
+          Сохранить
+        </Animated.Text>
+      </View>
+    </TouchableOpacity>
+  )
+}
+
 const Itemm = ({ item }) => {
   const fav = useSelector((state) => state.joke.fav)
   const dispatch = useDispatch()
@@ -37,24 +54,7 @@ const Itemm = ({ item }) => {
     dispatch(saveFav(joke))
   }
 
-  const RightActions = ({ progress, dragX, onPress }) => {
-    const scale = dragX.interpolate({
-      inputRange: [-100, 0],
-      outputRange: [1, 0],
-      extrapolate: 'clamp',
-    })
-    return (
-      <TouchableOpacity onPress={onPress}>
-        <View style={styles.rightAction}>
-          <Animated.Text
-            style={[styles.actionText, { transform: [{ scale }] }]}
-          >
-            Сохранить
-          </Animated.Text>
-        </View>
-      </TouchableOpacity>
-    )
-  }
+  
 
   return (
     <Swipeable
@@ -134,6 +134,7 @@ const HomeScreen = ({ navigation }) => {
   }, [navigation, fav])
 
   const nextHandler = () => {
+    fetchedJokes.length >= 30 ?
     Alert.alert(
       'Ого, 30 штук!',
       'Вы должны разработчику приложения 30 рублей за просмотр 30 анекдотов! Еще 30?',
@@ -147,7 +148,7 @@ const HomeScreen = ({ navigation }) => {
           },
         },
       ]
-    )
+    ) : ''
   }
 
   const renderItem = useCallback(({ item }) => {
