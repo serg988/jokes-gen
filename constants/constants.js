@@ -15,7 +15,7 @@ export const bkgPalette = [
   '#e1f0c4',
   '#f2e2ba',
   '#fff7ae',
-  '#ffc6d9',
+  '#ffd6d9',
   '#ffc6d9',
   '#ffeaae',
   '#dedbd8',
@@ -24,6 +24,8 @@ export const bkgPalette = [
 export const fontSizes = [14, 18, 20, 23]
 
 export const urlSources = [
-  'https://nameless-falls-80997.herokuapp.com/https://allanecdots.ru/vidgets/allanecdots.js?n=10&nocensored=1',
-  'https://nameless-falls-80997.herokuapp.com/https://www.anekdot.ru/rss/randomu.html',
+  // 'https://nameless-falls-80997.herokuapp.com/https://allanecdots.ru/vidgets/allanecdots.js?n=10&nocensored=1',
+  'https://allanecdots.ru/vidgets/allanecdots.js?n=10&nocensored=1',
+  // 'https://nameless-falls-80997.herokuapp.com/https://www.anekdot.ru/rss/randomu.html',
+  'https://www.anekdot.ru/rss/randomu.html',
 ]

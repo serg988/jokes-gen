@@ -35,7 +35,7 @@ const SettingsScreen = ({ navigation }) => {
         <RadioButton.Item color='#f4511e' label='Маленький' value={0} />
         <RadioButton.Item color='#f4511e' label='Средний' value={1} />
         <RadioButton.Item color='#f4511e' label='Большой' value={2} />
-        <RadioButton.Item color='#f4511e' label='XXL' value={3} />
+        <RadioButton.Item color='#f4511e' label='XXXL' value={3} />
       </RadioButton.Group>
       <View style={styles.buttonContainer}>
         <Button

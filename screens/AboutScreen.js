@@ -11,7 +11,7 @@ const About = ({ navigation }) => (
         Используются официальные источники: allanecdots.ru, anekdot.ru
       </Text>
       <Text style={{ marginVertical: 10 }}>
-        Минималистичный дизайн - оставлено только самое необходимое.
+        Минималистичный дизайн = оставлено только самое необходимое.
       </Text>
     </View>
     <Text style={styles.textBottom}>Версия: 1.1.1</Text>

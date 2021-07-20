@@ -52,9 +52,7 @@ const Itemm = ({ item }) => {
       }
     }
     dispatch(saveFav(joke))
-  }
-
-  
+  } 
 
   return (
     <Swipeable
