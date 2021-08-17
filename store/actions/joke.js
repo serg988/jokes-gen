@@ -29,13 +29,15 @@ export const setJokes = () => {
       if (urlNo === 0) {
         const jokesArr = allAnekdot(resData)
         const indexedArr = jokesArr.map((joke) =>
-          Object({ id: uuidv4(), joke: joke, bkg: bkgPalette[getNumber()] })
+          Object({ id: uuidv4(), joke: joke, bkg: getNumber() })
+          // Object({ id: uuidv4(), joke: joke, bkg: bkgPalette[getNumber()] })
         )
         dispatch({ type: SET_JOKES, payload: indexedArr })
       } else if (urlNo === 1) {
         const jokesArr = anekdot(resData)
         const indexedArr = jokesArr.map((joke) =>
-          Object({ id: uuidv4(), joke: joke, bkg: bkgPalette[8] })
+          Object({ id: uuidv4(), joke: joke, bkg: getNumber() })
+          // Object({ id: uuidv4(), joke: joke, bkg: bkgPalette[8] })
         )
         dispatch({ type: SET_JOKES, payload: indexedArr })
       }

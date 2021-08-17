@@ -22,8 +22,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "Anekdot.apk",
-      "enableDangerousExperimentalLeanBuilds": true
+      "package": "Anekdot.apk"
     },
     "web": {
       "favicon": "./assets/favicon.png"

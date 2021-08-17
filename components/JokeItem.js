@@ -40,7 +40,8 @@ const JokeItem = ({ joke, onDelete }) => {
       <Card
         style={{
           margin: 20,
-          backgroundColor: bkgPalette[getNumber()],
+          backgroundColor: getNumber(),
+          // backgroundColor: bkgPalette[getNumber()],
         }}
       >
         <Text style={{ fontSize: fontSize }}>{joke}</Text>
